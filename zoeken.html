@@ -31,4 +31,131 @@
           </select>
           <button class="small-btn" type="submit">Filter</button>
         </form>
-        <button id="resetAll" class="small
+        <button id="resetAll" class="small-btn">Verwijder alle advertenties</button>
+      </div>
+    </div>
+
+    <div id="results" class="grid"></div>
+
+    <a class="back" href="index.html">⬅️ Terug naar homepage</a>
+  </main>
+
+  <script>
+    // header links
+    document.getElementById('homeLink').addEventListener('click', ()=>{ window.location.href='index.html'; });
+    document.getElementById('logoMark').addEventListener('click', ()=>{ window.location.href='index.html'; });
+    document.getElementById('siteTitle').addEventListener('click', ()=>{ window.location.href='index.html'; });
+
+    const headerRight = document.getElementById('headerRight');
+    const user = JSON.parse(localStorage.getItem('abbo_user')||'null');
+    if(user && user.name){
+      headerRight.innerHTML = '<div style="font-weight:600">Welkom, '+user.name+'</div>';
+    }
+
+    function renderAd(ad, idx){
+      const el = document.createElement('div');
+      el.className = 'card';
+      // pill indicators
+      let pillsHtml = '<div class="pills">';
+      const total = parseInt(ad.totaalMensen||0);
+      const free = parseInt(ad.vrijePlekken||0);
+      const taken = Math.max(0, total - free);
+      for(let i=0;i<taken;i++){ pillsHtml += '<span class="pill taken" title="Bezet"></span>'; }
+      for(let i=0;i<free;i++){ pillsHtml += '<span class="pill free" title="Vrij"></span>'; }
+      pillsHtml += '</div>';
+
+      el.innerHTML = '<div style="display:flex; gap:12px; align-items:center;">' +
+                     '<img src="'+(ad.logo || 'https://cdn.simpleicons.org/netflix/E50914')+'" alt="" style="width:56px;height:56px;border-radius:8px;">' +
+                     '<div style="flex:1">' +
+                     '<h3 style="margin:0">'+ad.dienstNaam+'</h3>' +
+                     '<p style="margin:6px 0 0 0">Totaal: €'+ad.totaalPrijs+' — Per persoon: €'+ad.ppPrijs+'</p>' +
+                     '</div></div>' +
+                     pillsHtml +
+                     '<div class="ad-actions"><button class="small-btn" data-idx="'+idx+'" onclick="goDetail(this)">Reageren</button>' +
+                     '<button class="small-btn" data-idx="'+idx+'" onclick="toggleFav(this)">Favoriet</button>' +
+                     '<button class="small-btn" data-idx="'+idx+'" onclick="removeAd(this)">Verwijder</button></div>';
+      return el;
+    }
+
+    function loadAll(filter){
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+      const ads = JSON.parse(localStorage.getItem('abbo_ads')||'[]');
+      let list = ads;
+      if(filter && filter!=='all'){
+        list = ads.filter(a=>a.dienstNaam===filter);
+      }
+      if(list.length===0){
+        container.innerHTML = '<div class="card">Geen advertenties gevonden.</div>';
+        return;
+      }
+      list.forEach((ad, idx)=>{
+        container.appendChild(renderAd(ad, idx));
+      });
+    }
+
+    function goDetail(btn){
+      const idx = btn.getAttribute('data-idx');
+      localStorage.setItem('abbo_selected', idx);
+      window.location.href = 'advertentie.html?id='+idx;
+    }
+
+    function removeAd(btn){
+      const idx = parseInt(btn.getAttribute('data-idx'));
+      let ads = JSON.parse(localStorage.getItem('abbo_ads')||'[]');
+      if(idx>=0 && idx<ads.length){
+        ads.splice(idx,1);
+        localStorage.setItem('abbo_ads', JSON.stringify(ads));
+        loadAll(document.getElementById('filterSelect').value);
+      }
+    }
+
+    function toggleFav(btn){
+      const idx = parseInt(btn.getAttribute('data-idx'));
+      const ads = JSON.parse(localStorage.getItem('abbo_ads')||'[]');
+      const ad = ads[idx];
+      if(!ad) return;
+      let favs = JSON.parse(localStorage.getItem('abbo_favs')||'[]');
+      const key = ad.dienstNaam + '|' + ad.totaalPrijs + '|' + idx;
+      const exists = favs.find(f=>f.key===key);
+      if(exists){
+        favs = favs.filter(f=>f.key!==key);
+      } else {
+        favs.push({key, ad});
+      }
+      localStorage.setItem('abbo_favs', JSON.stringify(favs));
+      alert(exists? 'Verwijderd uit favorieten' : 'Toegevoegd aan favorieten');
+    }
+
+    document.getElementById('filterForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const dienst = document.getElementById('filterSelect').value;
+      loadAll(dienst);
+    });
+
+    document.getElementById('resetAll').addEventListener('click', ()=>{
+      if(confirm('Weet je zeker dat je alle advertenties wilt verwijderen?')){
+        localStorage.removeItem('abbo_ads');
+        loadAll('all');
+      }
+    });
+
+    // ✅ Initialize default ads and load all ads on page load
+    document.addEventListener('DOMContentLoaded', ()=>{
+      let ads = JSON.parse(localStorage.getItem('abbo_ads')||'[]');
+      if(ads.length === 0){
+        ads.push({
+          dienstNaam: "Disney+",
+          totaalPrijs: 10,
+          ppPrijs: 2,
+          totaalMensen: 5,
+          vrijePlekken: 5,
+          logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"
+        });
+        localStorage.setItem('abbo_ads', JSON.stringify(ads));
+      }
+      loadAll('all');
+    });
+  </script>
+</body>
+</html>
