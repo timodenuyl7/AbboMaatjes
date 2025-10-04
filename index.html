@@ -5,7 +5,41 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AbboMaatjes — Samen besparen</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; font-family:'Poppins', sans-serif; }
+    body { background:#f5f5f5; color:#333; }
+
+    /* --- Header --- */
+    .header { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.05); position:sticky; top:0; z-index:100; }
+    .logo-mark { font-weight:700; font-size:1.5rem; color:#1e5631; cursor:pointer; display:flex; align-items:center; gap:8px; }
+    #siteTitle { cursor:pointer; font-weight:600; color:#1e5631; }
+    .header-right { display:flex; gap:10px; align-items:center; }
+    .lang-flags img { cursor:pointer; width:20px; height:14px; }
+
+    /* --- Buttons --- */
+    .btn, .small-btn { background-color:#1e5631; color:#fff; border:none; border-radius:6px; padding:0.5rem 1rem; cursor:pointer; font-weight:600; text-decoration:none; display:inline-block; transition:background 0.2s; }
+    .btn:hover, .small-btn:hover { background-color:#144220; }
+    .small-btn.secondary { background-color:#f0f0f0; color:#333; }
+    .small-btn.secondary:hover { background-color:#e0e0e0; }
+
+    /* --- Main Container --- */
+    .container { max-width:1000px; margin:2rem auto; padding:0 1rem; display:grid; gap:2rem; }
+
+    /* --- Cards --- */
+    .card { background: linear-gradient(135deg, #e6f0ea, #ffffff); border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); padding:1rem 1.5rem; transition:transform 0.2s, box-shadow 0.2s; }
+    .card:hover { transform:translateY(-3px); box-shadow:0 6px 18px rgba(0,0,0,0.12); }
+
+    .card h3 { font-size:1.2rem; margin-bottom:0.5rem; }
+    .card p { font-size:1rem; color:#555; }
+    .grid { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); }
+
+    .cta-row { display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem; }
+    .services img { height:40px; margin-right:10px; }
+
+    /* --- Footer suggestions --- */
+    .suggestions textarea { flex:1; min-width:300px; min-height:80px; padding:8px; border-radius:8px; border:1px solid #ccc; }
+  </style>
 
   <!-- Google Translate script -->
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -28,103 +62,102 @@
   </script>
 </head>
 <body>
+
 <header class="header">
-  <div class="header-left" id="homeLink">
-    <a href="index.html" class="logo-mark" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+  <div class="header-left" id="homeLink" style="display:flex; align-items:center; gap:8px;">
+    <a href="index.html" class="logo-mark">
       <img src="IMG_20251003_153641.png" alt="AbboMaatjes Logo" style="height:50px;">
+      AbboMaatjes
     </a>
     <div>
       <h1 id="siteTitle">AbboMaatjes</h1>
       <div style="font-size:12px; color:#333">Samen abonnementen delen = samen besparen</div>
     </div>
   </div>
-  <div class="header-right" id="headerRight" style="display:flex; align-items:center; gap:10px;">
+  <div class="header-right" id="headerRight">
     <a class="login-link" href="login.html" id="loginLink">Login</a>
-    <!-- Language flags -->
-    <div style="display:flex; gap:6px;">
-      <img src="https://flagcdn.com/w20/nl.png" style="cursor:pointer;" onclick="doGTranslate('nl|nl');" alt="Nederlands">
-      <img src="https://flagcdn.com/w20/gb.png" style="cursor:pointer;" onclick="doGTranslate('nl|en');" alt="English">
+    <div class="lang-flags" style="display:flex; gap:6px;">
+      <img src="https://flagcdn.com/w20/nl.png" onclick="doGTranslate('nl|nl');" alt="Nederlands">
+      <img src="https://flagcdn.com/w20/gb.png" onclick="doGTranslate('nl|en');" alt="English">
     </div>
   </div>
 </header>
 
-<!-- hidden Google Translate element -->
 <div id="google_translate_element" style="display:none;"></div>
 
-  <main class="container">
-    <section class="hero">
-      <div class="left">
-        <h2>De slimme manier om abonnementen te delen</h2>
-        <p style="color:#444">Vind betrouwbare mensen om streaming-, leer- of muziek-abonnementen mee te delen. Bespaar geld en deel slim.</p>
-        <div class="cta-row">
-          <a class="btn" href="zoeken.html">Abonnement zoeken</a>
-          <a class="btn" href="aanbieden.html">Abonnement aanbieden</a>
-        </div>
-        <div class="services" style="margin-top:14px;">
-          <img src="https://cdn.simpleicons.org/spotify/1DB954" alt="Spotify">
-          <img src="https://cdn.simpleicons.org/netflix/E50914" alt="Netflix">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" alt="Disney+">
-          <img src="https://cdn.simpleicons.org/duolingo/58CC02" alt="Duolingo">
-        </div>
+<main class="container">
+  <section class="hero" style="display:flex; gap:2rem; flex-wrap:wrap;">
+    <div class="left" style="flex:1; min-width:300px;">
+      <h2>De slimme manier om abonnementen te delen</h2>
+      <p style="color:#444;">Vind betrouwbare mensen om streaming-, leer- of muziek-abonnementen mee te delen. Bespaar geld en deel slim.</p>
+      <div class="cta-row">
+        <a class="btn" href="zoeken.html">Abonnement zoeken</a>
+        <a class="btn" href="aanbieden.html">Abonnement aanbieden</a>
       </div>
-      <div class="card" style="width:320px;">
-        <h3>Waarom AbboMaatjes?</h3>
-        <ul>
-          <li>Betaal alleen jouw deel</li>
-          <li>Eenvoudig contact opnemen met aanbieders</li>
-          <li>Geen verborgen kosten</li>
-        </ul>
-      </div>
-    </section>
-
-    <section style="margin-top:18px;">
-      <div class="card">
-        <h3>Wat gebruikers zeggen</h3>
-        <div class="grid">
-          <div class="card">"Handig en snel!" — Lisa</div>
-          <div class="card">"Binnen een dag een plek gevonden." — Tom</div>
-          <div class="card">"Makkelijk om extra geld te verdienen." — Sarah</div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div style="max-width:900px; margin:0 auto;">
-      <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap;">
-        <div>© 2025 AbboMaatjes</div>
-        <div class="suggestions" style="display:flex; align-items:flex-start; gap:8px; flex-wrap:wrap; width:100%; max-width:600px;">
-          <textarea id="suggestionText" placeholder="Wat kunnen we verbeteren?" 
-            style="flex:1; min-width:300px; min-height:80px; padding:8px; border-radius:8px; border:1px solid #ccc;"></textarea>
-          <button class="small-btn" id="sendSuggestion" style="height:40px;">Verstuur</button>
-        </div>
-        <div id="suggestionResult" class="note"></div>
+      <div class="services" style="margin-top:14px;">
+        <img src="https://cdn.simpleicons.org/spotify/1DB954" alt="Spotify">
+        <img src="https://cdn.simpleicons.org/netflix/E50914" alt="Netflix">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" alt="Disney+">
+        <img src="https://cdn.simpleicons.org/duolingo/58CC02" alt="Duolingo">
       </div>
     </div>
-  </footer>
+    <div class="card" style="width:320px;">
+      <h3>Waarom AbboMaatjes?</h3>
+      <ul>
+        <li>Betaal alleen jouw deel</li>
+        <li>Eenvoudig contact opnemen met aanbieders</li>
+        <li>Geen verborgen kosten</li>
+      </ul>
+    </div>
+  </section>
 
-  <script>
-    // header links to home
-    document.getElementById('homeLink').addEventListener('click', ()=>{ window.location.href='index.html'; });
-    document.getElementById('siteTitle').addEventListener('click', ()=>{ window.location.href='index.html'; });
+  <section style="margin-top:18px;">
+    <div class="card">
+      <h3>Wat gebruikers zeggen</h3>
+      <div class="grid">
+        <div class="card">"Handig en snel!" — Lisa</div>
+        <div class="card">"Binnen een dag een plek gevonden." — Tom</div>
+        <div class="card">"Makkelijk om extra geld te verdienen." — Sarah</div>
+      </div>
+    </div>
+  </section>
+</main>
 
-    // show logged in user if present
-    const headerRight = document.getElementById('headerRight');
-    const user = JSON.parse(localStorage.getItem('abbo_user')||'null');
-    if(user && user.name){
-      headerRight.innerHTML = '<div style="font-weight:600">Welkom, '+user.name+'</div>';
-    }
+<footer class="footer">
+  <div style="max-width:900px; margin:0 auto;">
+    <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap;">
+      <div>© 2025 AbboMaatjes</div>
+      <div class="suggestions" style="display:flex; align-items:flex-start; gap:8px; flex-wrap:wrap; width:100%; max-width:600px;">
+        <textarea id="suggestionText" placeholder="Wat kunnen we verbeteren?"></textarea>
+        <button class="small-btn" id="sendSuggestion" style="height:40px;">Verstuur</button>
+      </div>
+      <div id="suggestionResult" class="note"></div>
+    </div>
+  </div>
+</footer>
 
-    // suggestion form
-    document.getElementById('sendSuggestion').addEventListener('click', ()=>{
-      const text = document.getElementById('suggestionText').value.trim();
-      if(!text){ document.getElementById('suggestionResult').textContent = 'Vul een suggestie in.'; return; }
-      let suggestions = JSON.parse(localStorage.getItem('abbo_suggestions')||'[]');
-      suggestions.push({text, date: new Date().toISOString()});
-      localStorage.setItem('abbo_suggestions', JSON.stringify(suggestions));
-      document.getElementById('suggestionResult').textContent = 'Bedankt voor je suggestie!';
-      document.getElementById('suggestionText').value='';
-    });
-  </script>
+<script>
+  // header links to home
+  document.getElementById('homeLink').addEventListener('click', ()=>{ window.location.href='index.html'; });
+  document.getElementById('siteTitle').addEventListener('click', ()=>{ window.location.href='index.html'; });
+
+  // show logged in user if present
+  const headerRight = document.getElementById('headerRight');
+  const user = JSON.parse(localStorage.getItem('abbo_user')||'null');
+  if(user && user.name){
+    headerRight.innerHTML = '<div style="font-weight:600">Welkom, '+user.name+'</div>';
+  }
+
+  // suggestion form
+  document.getElementById('sendSuggestion').addEventListener('click', ()=>{
+    const text = document.getElementById('suggestionText').value.trim();
+    if(!text){ document.getElementById('suggestionResult').textContent = 'Vul een suggestie in.'; return; }
+    let suggestions = JSON.parse(localStorage.getItem('abbo_suggestions')||'[]');
+    suggestions.push({text, date: new Date().toISOString()});
+    localStorage.setItem('abbo_suggestions', JSON.stringify(suggestions));
+    document.getElementById('suggestionResult').textContent = 'Bedankt voor je suggestie!';
+    document.getElementById('suggestionText').value='';
+  });
+</script>
 </body>
 </html>
