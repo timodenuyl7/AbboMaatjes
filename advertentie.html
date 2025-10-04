@@ -1,0 +1,97 @@
+
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Advertentie — AbboMaatjes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left" id="homeLink">
+      <div class="logo-mark" id="logoMark">€</div>
+      <div><h1 id="siteTitle">AbboMaatjes</h1></div>
+    </div>
+    <div class="header-right" id="headerRight"><a class="login-link" href="login.html" id="loginLink">Login</a></div>
+  </header>
+
+  <main class="container">
+    <div id="adContainer" class="card"></div>
+    <a class="back" href="zoeken.html">⬅️ Terug naar advertenties</a>
+  </main>
+
+  <script>
+    // header
+    document.getElementById('homeLink').addEventListener('click', ()=>{ window.location.href='index.html'; });
+    document.getElementById('logoMark').addEventListener('click', ()=>{ window.location.href='index.html'; });
+    document.getElementById('siteTitle').addEventListener('click', ()=>{ window.location.href='index.html'; });
+
+    const headerRight = document.getElementById('headerRight');
+    const user = JSON.parse(localStorage.getItem('abbo_user')||'null');
+    if(user && user.name){ headerRight.innerHTML = '<div style="font-weight:600">Welkom, '+user.name+'</div>'; }
+
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id')||localStorage.getItem('abbo_selected')||0);
+    const ads = JSON.parse(localStorage.getItem('abbo_ads')||'[]');
+    const ad = ads[id];
+    const container = document.getElementById('adContainer');
+    if(!ad){ container.innerHTML = '<div class="card">Advertentie niet gevonden.</div>'; }
+    else {
+      let pillsHtml = '<div class="pills">';
+      const total = parseInt(ad.totaalMensen||0);
+      const free = parseInt(ad.vrijePlekken||0);
+      const taken = Math.max(0, total - free);
+      for(let i=0;i<taken;i++){ pillsHtml += '<span class="pill taken" title="Bezet"></span>'; }
+      for(let i=0;i<free;i++){ pillsHtml += '<span class="pill free" title="Vrij"></span>'; }
+      pillsHtml += '</div>';
+
+      container.innerHTML = '<div style="display:flex; gap:12px; align-items:center;">' +
+                            '<img src="'+(ad.logo||'https://cdn.simpleicons.org/netflix/E50914')+'" style="width:72px;height:72px;border-radius:8px;">' +
+                            '<div style="flex:1"><h2>'+ad.dienstNaam+'</h2><p style="margin-top:6px">Totaal: €'+ad.totaalPrijs+' — Per persoon: €'+ad.ppPrijs+'</p></div></div>' +
+                            pillsHtml +
+                            '<div style="margin-top:12px" class="card"><h3>Betaalverzoek</h3>' +
+                            '<form id="payForm"><label>Je naam</label><input name="naam" required />' +
+                            '<label>E-mail</label><input name="email" type="email" required />' +
+                            '<label>Bedrag (EUR)</label><input name="bedrag" value="'+ad.ppPrijs+'" required />' +
+                            '<button class="btn" type="submit" style="margin-top:8px">Betaal nu</button></form>' +
+                            '<div id="payResult" class="note"></div></div>' +
+                            '<div style="margin-top:10px"><button class="fav" id="favBtn">Favoriet</button></div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const payForm = document.getElementById('payForm');
+      if(payForm){
+        payForm.addEventListener('submit', e=>{
+          e.preventDefault();
+          const data = new FormData(payForm);
+          const naam = data.get('naam');
+          const email = data.get('email');
+          const bedrag = data.get('bedrag');
+          document.getElementById('payResult').textContent = 'Bedankt '+naam+' — je betaling van €'+bedrag+' is verwerkt (demo).';
+          // update ad free spots
+          const adsAll = JSON.parse(localStorage.getItem('abbo_ads')||'[]');
+          const current = adsAll[id];
+          if(current){ current.vrijePlekken = Math.max(0, (parseInt(current.vrijePlekken)||0)-1); localStorage.setItem('abbo_ads', JSON.stringify(adsAll)); }
+        });
+      }
+      // favorite button
+      const favBtn = document.getElementById('favBtn');
+      if(favBtn){
+        favBtn.addEventListener('click', ()=>{
+          const adsAll = JSON.parse(localStorage.getItem('abbo_ads')||'[]');
+          const ad = adsAll[id];
+          if(!ad) return;
+          let favs = JSON.parse(localStorage.getItem('abbo_favs')||'[]');
+          const key = ad.dienstNaam + '|' + ad.totaalPrijs + '|' + id;
+          const exists = favs.find(f=>f.key===key);
+          if(exists){ favs = favs.filter(f=>f.key!==key); favBtn.textContent='Favoriet'; alert('Verwijderd uit favorieten'); }
+          else { favs.push({key, ad}); favBtn.textContent='Verwijderd uit favorieten'; alert('Toegevoegd aan favorieten'); }
+          localStorage.setItem('abbo_favs', JSON.stringify(favs));
+        });
+      }
+    });
+  </script>
+</body>
+</html>

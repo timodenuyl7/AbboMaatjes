@@ -1,0 +1,84 @@
+
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — AbboMaatjes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left" id="homeLink">
+      <div class="logo-mark" id="logoMark">€</div>
+      <div><h1 id="siteTitle">AbboMaatjes</h1></div>
+    </div>
+    <div class="header-right" id="headerRight"></div>
+  </header>
+
+  <main class="container">
+    <div class="card login-area">
+      <h2>Inloggen</h2>
+      <form id="loginForm">
+        <label>E-mail</label>
+        <input name="email" type="email" required />
+        <label>Wachtwoord</label>
+        <input name="password" type="password" required />
+        <button class="btn" type="submit" style="margin-top:10px">Inloggen</button>
+      </form>
+      <div class="note">Nog geen account? <a href="#" id="showRegister">Maak er één aan</a></div>
+    </div>
+
+    <div class="card login-area" id="registerCard" style="display:none;">
+      <h2>Account aanmaken</h2>
+      <form id="registerForm">
+        <label>Naam</label><input name="name" required />
+        <label>E-mail</label><input name="email" type="email" required />
+        <label>Wachtwoord</label><input name="password" type="password" required />
+        <button class="btn" type="submit" style="margin-top:10px">Maak account</button>
+      </form>
+      <div class="note"><a href="#" id="showLogin">Terug naar inloggen</a></div>
+    </div>
+
+    <a class="back" href="index.html">⬅️ Terug naar homepage</a>
+  </main>
+
+  <script>
+    document.getElementById('homeLink').addEventListener('click', ()=>{ window.location.href='index.html'; });
+    document.getElementById('showRegister').addEventListener('click', e=>{ e.preventDefault(); document.getElementById('registerCard').style.display='block'; });
+    document.getElementById('showLogin').addEventListener('click', e=>{ e.preventDefault(); document.getElementById('registerCard').style.display='none'; });
+
+    document.getElementById('registerForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const form = e.target;
+      const user = {name: form.name.value, email: form.email.value, password: form.password.value};
+      let users = JSON.parse(localStorage.getItem('abbo_users')||'[]');
+      users.push(user);
+      localStorage.setItem('abbo_users', JSON.stringify(users));
+      alert('Account gemaakt. Je kunt nu inloggen.');
+      form.reset();
+      document.getElementById('registerCard').style.display='none';
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const form = e.target;
+      const email = form.email.value;
+      const pw = form.password.value;
+      let users = JSON.parse(localStorage.getItem('abbo_users')||'[]');
+      const found = users.find(u=>u.email===email && u.password===pw);
+      if(found){
+        localStorage.setItem('abbo_user', JSON.stringify({name: found.name, email: found.email}));
+        alert('Ingelogd als '+found.name);
+        window.location.href = 'index.html';
+      } else { alert('Onjuiste gegevens.'); }
+    });
+
+    // show logged in user if present
+    const headerRight = document.getElementById('headerRight');
+    const user = JSON.parse(localStorage.getItem('abbo_user')||'null');
+    if(user && user.name){ headerRight.innerHTML = '<div style="font-weight:600">Welkom, '+user.name+'</div>'; }
+  </script>
+</body>
+</html>

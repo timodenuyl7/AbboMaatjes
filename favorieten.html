@@ -1,0 +1,67 @@
+
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Favorieten — AbboMaatjes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left" id="homeLink">
+      <div class="logo-mark" id="logoMark">€</div>
+      <div><h1 id="siteTitle">AbboMaatjes</h1></div>
+    </div>
+    <div class="header-right" id="headerRight"><a class="login-link" href="login.html" id="loginLink">Login</a></div>
+  </header>
+
+  <main class="container">
+    <div class="card"><h2>Favorieten</h2><div id="favList" class="grid"></div></div>
+    <a class="back" href="index.html">⬅️ Terug naar homepage</a>
+  </main>
+
+  <script>
+    document.getElementById('homeLink').addEventListener('click', ()=>{ window.location.href='index.html'; });
+    const headerRight = document.getElementById('headerRight');
+    const user = JSON.parse(localStorage.getItem('abbo_user')||'null');
+    if(user && user.name){ headerRight.innerHTML = '<div style="font-weight:600">Welkom, '+user.name+'</div>'; }
+
+    function renderFav(f, idx){
+      const el = document.createElement('div'); el.className='card';
+      el.innerHTML = '<h3>'+f.ad.dienstNaam+'</h3><p>€'+f.ad.totaalPrijs+' — €'+f.ad.ppPrijs+' p.p.</p>' +
+                     '<div class="ad-actions"><button class="small-btn" onclick="openAd('+idx+')">Bekijk</button>' +
+                     '<button class="small-btn" onclick="removeFav('+idx+')">Verwijder</button></div>';
+      return el;
+    }
+
+    function loadFavs(){
+      const favList = document.getElementById('favList');
+      favList.innerHTML='';
+      const favs = JSON.parse(localStorage.getItem('abbo_favs')||'[]');
+      if(favs.length===0){ favList.innerHTML='<div class="card">Geen favorieten.</div>'; return; }
+      favs.forEach((f, i)=>{ favList.appendChild(renderFav(f,i)); });
+    }
+
+    function openAd(i){
+      const favs = JSON.parse(localStorage.getItem('abbo_favs')||'[]');
+      const ad = favs[i].ad;
+      // find index in abbo_ads
+      const ads = JSON.parse(localStorage.getItem('abbo_ads')||'[]');
+      const idx = ads.findIndex(a=>a.dienstNaam===ad.dienstNaam && a.totaalPrijs==ad.totaalPrijs && a.ppPrijs==ad.ppPrijs);
+      if(idx>=0){ localStorage.setItem('abbo_selected', idx); window.location.href='advertentie.html?id='+idx; }
+      else { alert('Advertentie niet meer beschikbaar.'); }
+    }
+
+    function removeFav(i){
+      let favs = JSON.parse(localStorage.getItem('abbo_favs')||'[]');
+      favs.splice(i,1);
+      localStorage.setItem('abbo_favs', JSON.stringify(favs));
+      loadFavs();
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{ loadFavs(); });
+  </script>
+</body>
+</html>
