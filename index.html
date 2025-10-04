@@ -62,7 +62,6 @@
   </script>
 </head>
 <body>
-
 <header class="header">
   <div class="header-left" id="homeLink" style="display:flex; align-items:center; gap:8px;">
     <a href="index.html" class="logo-mark">
@@ -128,7 +127,8 @@
     <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap;">
       <div>© 2025 AbboMaatjes</div>
       <div class="suggestions" style="display:flex; align-items:flex-start; gap:8px; flex-wrap:wrap; width:100%; max-width:600px;">
-        <textarea id="suggestionText" placeholder="Wat kunnen we verbeteren?"></textarea>
+        <textarea id="suggestionText" placeholder="Wat kunnen we verbeteren?" 
+          style="flex:1; min-width:300px; min-height:80px; padding:8px; border-radius:8px; border:1px solid #ccc;"></textarea>
         <button class="small-btn" id="sendSuggestion" style="height:40px;">Verstuur</button>
       </div>
       <div id="suggestionResult" class="note"></div>
